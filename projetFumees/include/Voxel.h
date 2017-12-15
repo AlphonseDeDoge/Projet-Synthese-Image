@@ -13,6 +13,7 @@ class Voxel : public BaseVBO
         float size;
         glm::vec3* accel;
         glm::vec3* oldWind;
+		bool testVoxel();
 
     public:
         Voxel();
@@ -20,10 +21,6 @@ class Voxel : public BaseVBO
         void updateVec(glm::vec3* wind);
         glm::vec3* getAccel();
         float randNumber(float min, float max);
-        void fillId();
-        void fillVertex();
-        void fillColor();
-        void update();
         void explain();
         void drawDebug();
         bool contains(Point* point);
