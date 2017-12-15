@@ -56,30 +56,6 @@ glm::vec3* Voxel::getAccel()
     return this->accel;
 }
 
-/**
-*
-*/
-
-void Voxel::update()
-{
-
-}
-
-void Voxel::fillId()
-{
-
-}
-
-void Voxel::fillVertex()
-{
-
-}
-
-void Voxel::fillColor()
-{
-
-}
-
 /** Debug echo
 */
 void Voxel::explain()
@@ -158,4 +134,55 @@ bool Voxel::contains(Point* point)
 bool Voxel::contains(Particle* particle)
 {
     return contains(particle->getPosition());
+}
+
+bool testVoxel()
+{
+	Point* p1 = new Point(0.1,0.1,0.1);
+	Point* p2 = new Point(0.3,0.3,0.3);
+	Point* p3 = new Point(0.4,0.4,0.4);
+	Particle* pA = new Particle(0,50,p2,new glm::vec3(0.0,0.0,0.0));
+	Voxel* v1 = new Voxel(new Point(), 0, 0.2);
+	Voxel* v2 = new Voxel(new Point(0.2,0.0,0.0), 0, 0.2);
+	
+	glm::vec3* w1 = new glm::vec3(0.1,0.1,0.1);
+	
+	bool oracle_contains = false;
+	if( (v1->contains(p1)==oracle_contains) || (v1->contains(p3)!=oracle_contains) )
+	{
+		printf("Test de Voxel raté : Erreur dans contains(Point* point)\n");
+		return false;
+	}
+	
+	if( v1->contains(pA)!=oracle_contains )
+	{
+		printf("Test de Voxel raté : Erreur dans contains(Particle* particle)\n");
+		return false;
+	}
+	
+	bool oracle_updateVec = true;
+	if( v1->getAccel().equals(v2->getAccel())==oracle_updateVec )
+	{
+		glm::vec3 tmp = &(v1->getAccel()); // current accel value into tmp
+		v1->updateVec(w1); // changing accel value
+		if( tmp.equals(&(v1->getAccel()))==oracle_updateVec ) // comparing
+		{
+			printf("Test de Voxel raté : Erreur dans updateVec(glm::vec3* wind) en nouveau changement\n");
+			return false;
+		}
+		tmp = &(v1->getAccel()); // new temporary variable save
+		vi->updateVec(w1); // applying the same new wind value to change accel (shouldn't do anything)
+		if( tmp.equals(&(v1->getAccel()))!=oracle_updateVec ) // comparing
+		{
+			printf("Test de Voxel raté : Erreur dans updateVec(glm::vec3* wind) en copie du dernier changement\n");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Test de Voxel raté : Méthode equals non utilisable dans ce cas\n");
+		return false;
+	}
+	
+	return true;
 }
