@@ -277,3 +277,37 @@ void Field::draw()
         //particles[i]->drawDebug();
     }
 }
+
+bool Field::testField()
+{
+	generateParticles();
+	for(int i=0;i<nbParticules;i++)
+	{
+		if(particles[i]==NULL){
+			printf("error : Particle null\n");
+			return false;
+		}
+	}
+	
+	int oracle_getGridLength = 8000;
+	
+	if(oracle_getGridLength != getGridLength())
+	{
+		printf("error : bad grid length\n");
+		return false;
+	}
+	
+	float oracle_randNumberMin = 0;
+	float oracle_randNumberMax = 2;
+	
+	if(oracle_randNumberMin > randNumber(oracle_randNumberMin(), oracle_randNumberMax()) && oracle_randNumberMax < randNumber(oracle_randNumberMin(), oracle_randNumberMax()))
+	{
+		printf("error : Random value outside the range");
+		return false;
+	}
+	
+	return true;	
+}
+
+
+
